@@ -15,6 +15,10 @@ class Post(BaseModel):
     published: bool=True
     rating:Optional[int]=None
 
+
+
+
+
 my_posts=[{"title":"title of post 1","content":"content of post 1","id":1},{"title":"Favorite foods","content":"I like pizza","id":2}]
 
 def find_post(id):
@@ -78,3 +82,15 @@ def delete_post(id:int):
 
 
 # Title str, Content str
+
+
+@app.put("/posts/{id}")
+def update_post(id:int,post:Post):
+    index=find_index_post(id)
+    if index==None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Post with id: {id} does not exist")
+
+    post_dict=post.dict()
+    post_dict['id']=id
+    my_posts[index]=post_dict
+    return {"data":post_dict}
